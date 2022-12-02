@@ -1,13 +1,23 @@
-import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, cleanup } from 'jest.setup';
 
 import { {{ properCase componentName }} } from '..';
 
-describe('
-<{{ properCase componentName }} />', () => {
-it('should match snapshot', () => {
-const loadingIndicator = render(
-<{{ properCase componentName }} />);
-expect(loadingIndicator.container.firstChild).toMatchSnapshot();
-});
+afterEach(cleanup);
+
+const renderComponent = ({ ...props }) =>
+  render(
+    <{{ properCase componentName }} {...props} />,
+  );
+
+describe('<{{ properCase componentName }} />', () => {
+  it('expect to not log errors in console', () => {
+    const spy = jest.spyOn(global.console, 'error');
+    renderComponent({});
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('should match snapshot', () => {
+    const { container } = renderComponent({});
+    expect(container.firstChild).toMatchSnapshot();
+  });
 });
